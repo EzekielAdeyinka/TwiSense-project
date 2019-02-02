@@ -1,0 +1,22 @@
+  .card {
+  box-shadow: 0 10px 20px rgba(253, 121, 121, 0.19), 0 6px 6px rgba(0,0,0,0.23);
+  }
+  .card img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+  }
+  form.form-signin {
+   margin-top: 20px;
+  }
+pre {
+    white-space: pre-wrap;       /* Since CSS 2.1 */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+.btn {
+  white-space: normal;
+}
+
