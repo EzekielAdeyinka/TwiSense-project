@@ -6,61 +6,85 @@
         <script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>
         <script type="text/javascript" src="http://x3dom.org/x3dom/example/x3dom.js"></script>
         <script src="https://d3js.org/d3.v4.min.js"></script>
+
+          <style> 
+            /*
+            input[type=text] {
+              width: 50%;
+              box-sizing: border-box;
+              border: 2px solid #ccc;
+              border-radius: 4px;
+              font-size: 16px;
+              background-color: white;
+              background-image: url('searchicon.png');
+              background-position: 10px 10px; 
+              background-repeat: no-repeat;
+              padding: 12px 20px 12px 40px;
+            }
+            */
+              form.twitfrm{
+                max-width: 528px;
+                display: block;
+              }
+              input[type=date]{
+                width: 250px;
+                padding: 15px;
+                border:1px solid #444;
+              }
+              .daten{
+                width:50%;
+                float:left;
+              }
+              /*.daten:first-child{
+                float: right;
+              }*/
+              button.button {
+                background-color: #0905EC; /* blue*/
+                border: none;
+                color: white;
+                padding: 16px 32px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                margin: 4px 2px;
+                -webkit-transition-duration: 0.4s; /* Safari */
+                transition-duration: 0.4s;
+                cursor: pointer;
+                margin-top:15px;
+              }
+              
+              /*.button1 {
+                background-color: white; 
+                color: black; 
+                border: 2px solid #4C53AF;
+              }*/
+        </style>
+                    
+        
     </head>
     
     <body>
            <center> 
                
-               <style> 
-                    input[type=text] {
-                      width: 50%;
-                      box-sizing: border-box;
-                      border: 2px solid #ccc;
-                      border-radius: 4px;
-                      font-size: 16px;
-                      background-color: white;
-                      background-image: url('searchicon.png');
-                      background-position: 10px 10px; 
-                      background-repeat: no-repeat;
-                      padding: 12px 20px 12px 40px;
-                    }
-                    </style>
-                
                     <br>
                     <br>
                     <br>
-                    <h4>Enter any Twitter handle to Analyse</h4>
+                    <h4>Enter any dates to Analyse & Visualize Bitcoin price</h4>
                     
-                    <form>
-                      <input type="text" name="search" placeholder="@Davido..">
+                    <form class="twitfrm" name="bitcoinform" method="post" action="#">
+                      <div class="daten">
+                        <p>Start Date</p>
+                        <input type="date" name="start_date" placeholder="Start Date">
+                      </div>
+                      <div class="daten">
+                        <p>End Date</p>
+                        <input type="date" name="end_date" placeholder="End date..">
+                      </div>
+                      <div style="clear:both"></div>
+                      <button class="button search">Visualize</button>
                     </form>
 
-
-                    <style>
-                            .button {
-                              background-color: #0905EC; /* blue*/
-                              border: none;
-                              color: white;
-                              padding: 16px 32px;
-                              text-align: center;
-                              text-decoration: none;
-                              display: inline-block;
-                              font-size: 16px;
-                              margin: 4px 2px;
-                              -webkit-transition-duration: 0.4s; /* Safari */
-                              transition-duration: 0.4s;
-                              cursor: pointer;
-                            }
-                            
-                            .button1 {
-                              background-color: white; 
-                              color: black; 
-                              border: 2px solid #4C53AF;
-                            }
-
-                          
-                            </style>
-                    <button class="button button2">Analyse</button>
                 </center> 
 
         
@@ -87,7 +111,7 @@
                       
                 
                 
-                    <center><h4>Tweet Sentimental Analysis</h4></center>
+                    <center><h4>Bitcoin Sentimental Analysis</h4></center>
                     <hr>
                     <div class="history"></div>
                 
@@ -148,29 +172,90 @@
                 }
                         </style>
                 
-                        <center><h4>Tweet per Time</h4></center>
+                        <center><h4>Bitcoin price per Time <span id="start_end"></span></h4></center>
                         <hr>
                         <svg class="line-chart"></svg>
                         
                         <script src="https://d3js.org/d3.v4.min.js"></script>
                         <script>
-                        
+
+                      let a = '2017-12-31'
+                      let b = '2018-04-01'
+
+                      let base = 'https://api.coindesk.com/v1/bpi/historical/close.json?start='
+                      let api = base+a+'&end='+b
+
+                      let current_date = new Date();
+
+                      // clicking submit button
+                document.querySelector('.button.search').addEventListener('click', function(event){
+                  event.preventDefault()
+
+                    a = bitcoinform.start_date.value
+                    b = bitcoinform.end_date.value
+
+                   if(a == '' && b == ''){
+                      alert('please put a value for Start date and End date')
+                       a = '2017-12-31'
+                       b = '2018-04-01'
+                   }
+                   if(!a){
+                      alert('please put a value for Start date')
+                       a = '2017-12-31'
+                       b = '2018-04-01'
+                   }
+                   if(!b){
+                      alert('please put a value for End date')
+                       a = '2017-12-31'
+                       b = '2018-04-01'
+                   }
+
+                   start_date_str = new Date(a)
+                   end_date_str = new Date(b)
+
+                   // console.log('today\'s_date converted: '+current_date+ '\n start_data converted: '+start_date_str+ '\n end_date converted:'+end_date_str)
+
+                   if (start_date_str > current_date){
+                      alert('please put a Start date of a value before today date')
+                      a = ''; b = ''
+                      return false
+                   }
+
+                   if (end_date_str > current_date){
+                      alert('please put a End date of a value before today date')
+                      a = ''; b = ''
+                      return false
+                   }
+
+                   document.getElementById('start_end').textContent = 'from '+a+ ' to ' + b;
+
+                   console.log('start_data: '+a+ '\n end_date:'+b)
+
+                   api = base+a+'&end='+b
+
+                   visualizebitcoin();
+                   
+                })
                         //API to fetch historical data of Bitcoin Price Index
-                const api = 'https://api.coindesk.com/v1/bpi/historical/close.json?start=2017-12-31&end=2018-04-01';
+                // let api = 'https://api.coindesk.com/v1/bpi/historical/close.json?start=2017-12-31&end=2018-04-01';
                 
                 /**
                  * Loading data from API when DOM Content has been loaded'.
                  */
-                document.addEventListener("DOMContentLoaded", function(event) {
-                fetch(api)
-                    .then(function(response) { return response.json(); })
-                    .then(function(data) {
-                        var parsedData = parseData(data);
-                        drawChart(parsedData);
-                    })
-                    .catch(function(err) { console.log(err); })
-                });
-                
+                function visualizebitcoin() {
+                  // document.addEventListener("DOMContentLoaded", function(event) {
+                  fetch(api)
+                      .then(function(response) { return response.json(); })
+                      .then(function(data) {
+                          var parsedData = parseData(data);
+                          drawChart(parsedData);
+                      })
+                      .catch(function(err) { console.log(err); })
+                  console.log('fetching data....')
+                  console.log(api)
+                  // });
+                }
+                visualizebitcoin();
                 /**
                  * Parse data into key-value pairs
                  * @param {object} data Object containing historical data of BPI
@@ -191,6 +276,7 @@
                  * @param {object} data Object containing historical data of BPI
                  */
                 function drawChart(data) {
+                  console.log('drawing chat')
                 var svgWidth = 600, svgHeight = 400;
                 var margin = { top: 20, right: 20, bottom: 30, left: 50 };
                 var width = svgWidth - margin.left - margin.right;
@@ -246,5 +332,6 @@
                     </script>     
         </div>                
     </div>
+
        </body>
        </html>
