@@ -181,6 +181,7 @@
 
                       let a = '2017-12-31'
                       let b = '2018-04-01'
+                      let check = 0
 
                       let base = 'https://api.coindesk.com/v1/bpi/historical/close.json?start='
                       let api = base+a+'&end='+b
@@ -198,16 +199,19 @@
                       alert('please put a value for Start date and End date')
                        a = '2017-12-31'
                        b = '2018-04-01'
+                       return false
                    }
                    if(!a){
                       alert('please put a value for Start date')
                        a = '2017-12-31'
                        b = '2018-04-01'
+                       return false
                    }
                    if(!b){
                       alert('please put a value for End date')
                        a = '2017-12-31'
                        b = '2018-04-01'
+                       return false
                    }
 
                    start_date_str = new Date(a)
@@ -232,7 +236,7 @@
                    console.log('start_data: '+a+ '\n end_date:'+b)
 
                    api = base+a+'&end='+b
-
+                   check = 1
                    visualizebitcoin();
                    
                 })
@@ -244,6 +248,7 @@
                  */
                 function visualizebitcoin() {
                   // document.addEventListener("DOMContentLoaded", function(event) {
+
                   fetch(api)
                       .then(function(response) { return response.json(); })
                       .then(function(data) {
@@ -254,6 +259,13 @@
                   console.log('fetching data....')
                   console.log(api)
                   // });
+
+                  if (check){
+                    document.querySelector('svg.line-chart').innerHTML = ''
+                    console.log('clear chat')
+                    check = 0
+                  }
+
                 }
                 visualizebitcoin();
                 /**
